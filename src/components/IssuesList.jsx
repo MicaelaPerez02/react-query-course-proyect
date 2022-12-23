@@ -9,6 +9,8 @@ export default function IssuesList({ labels, status }) {
     return fetch(`https://ui.dev/api/courses/react-query/issues?${labelsString}${statusString}`).then((res) =>
       res.json()
     );
+  }, {
+    staleTime: 1000 * 60,
   });
   const [searchValue, setSearchValue] = useState("");
 
