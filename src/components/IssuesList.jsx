@@ -4,18 +4,18 @@ import fetchWithError from "../helpers/fetchWithError";
 import { IssueItem } from "./IssueItem";
 
 export default function IssuesList({ labels, status }) {
-  const issuesQuery = useQuery(["issues", { labels, status }], () => {
+  const issuesQuery = useQuery(["issues", { labels, status }], ({ signal }) => {
     const statusString = status ? `&status=${status}` : "";
     const labelsString = labels.map((label) => `labels[]=${label}`).join("&");
-    return fetchWithError(`https://ui.dev/api/courses/react-query/issues?${labelsString}${statusString}`)
+    return fetchWithError(`https://ui.dev/api/courses/react-query/issues?${labelsString}${statusString}`, { signal })
   });
 
   const [searchValue, setSearchValue] = useState("");
 
   const searchQuery = useQuery(
     ["issues", "search", searchValue],
-    () =>
-      fetchWithError(`https://ui.dev/api/courses/react-query/search/issues?q=${searchValue}`),
+    ({ signal }) =>
+      fetchWithError(`https://ui.dev/api/courses/react-query/search/issues?q=${searchValue}`, { signal }),
     {
       enabled: searchValue.length > 0,
     }
