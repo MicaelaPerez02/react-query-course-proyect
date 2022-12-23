@@ -8,8 +8,6 @@ export default function IssuesList({ labels, status }) {
     const statusString = status ? `&status=${status}` : "";
     const labelsString = labels.map((label) => `labels[]=${label}`).join("&");
     return fetchWithError(`https://ui.dev/api/courses/react-query/issues?${labelsString}${statusString}`)
-  }, {
-    staleTime: 1000 * 60,
   });
 
   const [searchValue, setSearchValue] = useState("");
@@ -17,7 +15,7 @@ export default function IssuesList({ labels, status }) {
   const searchQuery = useQuery(
     ["issues", "search", searchValue],
     () =>
-    fetchWithError(`https://ui.dev/api/courses/react-query/search/issues?q=${searchValue}`),
+      fetchWithError(`https://ui.dev/api/courses/react-query/search/issues?q=${searchValue}`),
     {
       enabled: searchValue.length > 0,
     }
