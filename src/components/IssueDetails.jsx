@@ -1,19 +1,20 @@
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import fetchWithError from "../helpers/fetchWithError";
 import relativeDate from "../helpers/relativeDate";
 import { useUserData } from "../helpers/useUserData";
 import { IssueHeader } from "./IssueHeader";
 
 function useIssueData(issueNumber) {
   return useQuery(["issues", issueNumber], () => {
-    return fetchWithError(`https://ui.dev/api/courses/react-query/issues/${issueNumber}`);
+    return fetch(`https://ui.dev/api/courses/react-query/issues/${issueNumber}`).then((res) => res.json());
   });
 }
 
 function useIssueComments(issueNumber) {
   return useQuery(["issues", issueNumber, "comments"], () => {
-    return fetchWithError(`https://ui.dev/api/courses/react-query/issues/${issueNumber}/comments`);
+    return fetch(`https://ui.dev/api/courses/react-query/issues/${issueNumber}/comments`).then((res) =>
+      res.json()
+    );
   });
 }
 
@@ -52,7 +53,7 @@ export default function IssueDetails() {
     <div className="issue-details">
       {issueQuery.isLoading ? (
         <p>Loading issue...</p>
-      ) : issueQuery.isError ? <p>{issuesQuery.error.message}</p> : (
+      ) : (
         <>
           <IssueHeader {...issueQuery.data} />
 
@@ -60,7 +61,7 @@ export default function IssueDetails() {
             <section>
               {commentsQuery.isLoading ? (
                 <p>Loading...</p>
-              ) : commentsQuery.isError ? <p>{commentsQuery.error.message}</p> : (
+              ) : (
                 commentsQuery.data?.map((comment) => (
                   <Comment key={comment.id} {...comment} />
                 ))
